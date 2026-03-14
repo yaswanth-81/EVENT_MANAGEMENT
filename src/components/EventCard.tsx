@@ -31,7 +31,7 @@ export default function EventCard({ event, onRegister }: EventCardProps) {
         </div>
         <div className="mt-auto flex items-center justify-between pt-4">
           <span className="text-lg font-semibold tabular-nums text-foreground">
-            {event.price === 0 ? "Free" : `$${event.price}`}
+            {event.price === 0 ? "Free" : `₹${event.price}`}
           </span>
           {onRegister && (
             <Button size="sm" onClick={() => onRegister(event.id)}>

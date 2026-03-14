@@ -15,17 +15,25 @@ export default function ManageEventsPage() {
     setEditForm({ name: e.name, date: e.date, price: String(e.price) });
   };
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
     if (editId) {
-      updateEvent(editId, { name: editForm.name, date: editForm.date, price: Number(editForm.price) });
-      toast.success("Event updated");
-      setEditId(null);
+      try {
+        await updateEvent(editId, { name: editForm.name, date: editForm.date, price: Number(editForm.price) });
+        toast.success("Event updated");
+        setEditId(null);
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "Failed to update event");
+      }
     }
   };
 
-  const handleDelete = (id: string) => {
-    deleteEvent(id);
-    toast.success("Event deleted");
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteEvent(id);
+      toast.success("Event deleted");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to delete event");
+    }
   };
 
   return (
@@ -68,7 +76,7 @@ export default function ManageEventsPage() {
                   <>
                     <td className="py-4 pr-4 font-medium">{event.name}</td>
                     <td className="py-4 pr-4 tabular-nums text-muted-foreground">{event.date}</td>
-                    <td className="py-4 pr-4 tabular-nums">{event.price === 0 ? "Free" : `$${event.price}`}</td>
+                    <td className="py-4 pr-4 tabular-nums">{event.price === 0 ? "Free" : `₹${event.price}`}</td>
                     <td className="py-4 text-right">
                       <div className="flex justify-end gap-1">
                         <Button size="icon" variant="ghost" onClick={() => startEdit(event)}><Pencil className="h-4 w-4" /></Button>

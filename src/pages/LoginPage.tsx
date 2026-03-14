@@ -13,12 +13,16 @@ export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return toast.error("Please fill all fields");
-    login(email, password);
-    toast.success("Welcome back!");
-    navigate("/dashboard");
+    try {
+      await login(email, password);
+      toast.success("Welcome back!");
+      navigate("/dashboard");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Login failed");
+    }
   };
 
   return (

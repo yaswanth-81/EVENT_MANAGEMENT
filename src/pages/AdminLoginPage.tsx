@@ -10,16 +10,18 @@ import { toast } from "sonner";
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { adminLogin } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (adminLogin(email, password)) {
-      toast.success("Welcome, Admin!");
+    try {
+      await login(email, password);
+      // Admin gating is enforced in AdminLayout; just navigate.
+      toast.success("Signed in");
       navigate("/admin");
-    } else {
-      toast.error("Invalid admin credentials");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Login failed");
     }
   };
 

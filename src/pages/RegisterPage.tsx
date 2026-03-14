@@ -14,13 +14,17 @@ export default function RegisterPage() {
 
   const set = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => setForm((f) => ({ ...f, [key]: e.target.value }));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.password) return toast.error("Please fill all required fields");
     if (form.password !== form.confirm) return toast.error("Passwords do not match");
-    register(form.name, form.email);
-    toast.success("Account created!");
-    navigate("/dashboard");
+    try {
+      await register(form.name, form.email, form.password);
+      toast.success("Account created!");
+      navigate("/dashboard");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Registration failed");
+    }
   };
 
   return (

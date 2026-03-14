@@ -1,7 +1,7 @@
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { LayoutDashboard, PlusCircle, List, LogOut, CalendarDays, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const navItems = [
   { to: "/admin", icon: LayoutDashboard, label: "Dashboard" },
@@ -10,10 +10,20 @@ const navItems = [
 ];
 
 export default function AdminLayout() {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/admin-login", { replace: true });
+      return;
+    }
+    if (user.role !== "admin") {
+      navigate("/", { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleLogout = () => {
     logout();
